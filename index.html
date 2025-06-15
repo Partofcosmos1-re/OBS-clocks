@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Clock Widgets</title>
+    <link rel="stylesheet" href="styles/clocks.css">
+</head>
+<body>
+    <div class="container">
+        <h1>OBS Studio Clock Widgets</h1>
+        <p>Use these URLs in OBS Studio as Browser Sources. Right-click any clock to copy its URL.</p>
+        
+        <div class="clock-grid">
+            <!-- Digital Clocks -->
+            <div class="clock-card" onclick="copyUrl('digital-simple')">
+                <div class="clock-preview">
+                    <div id="digital-simple" class="clock digital-simple"></div>
+                </div>
+                <h3>Simple Digital</h3>
+            </div>
+            
+            <div class="clock-card" onclick="copyUrl('digital-modern')">
+                <div class="clock-preview">
+                    <div id="digital-modern" class="clock digital-modern"></div>
+                </div>
+                <h3>Modern Digital</h3>
+            </div>
+            
+            <!-- Analog Clocks -->
+            <div class="clock-card" onclick="copyUrl('analog-simple')">
+                <div class="clock-preview">
+                    <div id="analog-simple" class="clock analog-simple">
+                        <div class="hand hour-hand"></div>
+                        <div class="hand minute-hand"></div>
+                        <div class="hand second-hand"></div>
+                    </div>
+                </div>
+                <h3>Simple Analog</h3>
+            </div>
+            
+            <div class="clock-card" onclick="copyUrl('analog-minimal')">
+                <div class="clock-preview">
+                    <div id="analog-minimal" class="clock analog-minimal">
+                        <div class="hand hour-hand"></div>
+                        <div class="hand minute-hand"></div>
+                    </div>
+                </div>
+                <h3>Minimal Analog</h3>
+            </div>
+            
+            <!-- Stopwatch -->
+            <div class="clock-card" onclick="copyUrl('stopwatch')">
+                <div class="clock-preview">
+                    <div id="stopwatch" class="clock stopwatch">00:00:00</div>
+                </div>
+                <h3>Stopwatch</h3>
+            </div>
+            
+            <!-- Countdown -->
+            <div class="clock-card" onclick="copyUrl('countdown')">
+                <div class="clock-preview">
+                    <div id="countdown" class="clock countdown">25:00</div>
+                </div>
+                <h3>Pomodoro Timer</h3>
+            </div>
+            
+            <!-- Date Display -->
+            <div class="clock-card" onclick="copyUrl('date-display')">
+                <div class="clock-preview">
+                    <div id="date-display" class="clock date-display"></div>
+                </div>
+                <h3>Date Display</h3>
+            </div>
+            
+            <!-- Timezone Clock -->
+            <div class="clock-card" onclick="copyUrl('timezone')">
+                <div class="clock-preview">
+                    <div id="timezone" class="clock timezone"></div>
+                </div>
+                <h3>Timezone Clock</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="url-copied-notification" id="notification">URL copied to clipboard!</div>
+
+    <script src="scripts/clocks.js"></script>
+    <script>
+        function copyUrl(clockId) {
+            const url = window.location.href.split('?')[0] + '?clock=' + clockId;
+            navigator.clipboard.writeText(url).then(() => {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 2000);
+            });
+        }
+
+        // Initialize the preview clocks
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const clockType = urlParams.get('clock');
+            
+            if (clockType) {
+                // If a specific clock is requested, show only that one
+                document.body.innerHTML = `
+                    <div id="${clockType}" class="clock ${clockType}"></div>
+                    <script src="scripts/clocks.js"><\/script>
+                `;
+            } else {
+                // Otherwise, show the full page with all clocks
+                updateAllClocks();
+                setInterval(updateAllClocks, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
